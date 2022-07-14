@@ -3,12 +3,20 @@ import React from 'react'
 
 export function Header() {
   return (
-    <div>
-      <h1>Header Component</h1>
+    <div className='flex justify-between max-w-6xl'>
+      {/* left */}
 
-      <div>
-        <Image layout='fill' src='https://links.papareact.com/ocw' />
+      <div className='relative lg:hidden h-10 w-10 flex-shrink-0 cursor-pointer'>
+        <Image
+          layout='fill'
+          objectFit='contain'
+          src='https://links.papareact.com/jjm'
+        />
       </div>
+
+      {/* mid */}
+
+      {/* right */}
     </div>
   )
 }
