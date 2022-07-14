@@ -47,7 +47,13 @@ export const Header: NextComponentType = () => {
         </div>
 
         {/* right */}
-        <HomeIcon className='h-10 w-10' />
+        <div className='flex items-center justify-end space-x-4'>
+          <HomeIcon className='navBtn' />
+          <MenuIcon className='h-6 md:hidden cursor-pointer' />
+          <PaperAirplaneIcon className='navBtn' />
+          <PlusCircleIcon className='navBtn' />
+          <HeartIcon className='navBtn' />
+        </div>
       </div>
     </div>
   )
