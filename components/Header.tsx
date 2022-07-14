@@ -53,6 +53,12 @@ export const Header: NextComponentType = () => {
           <PaperAirplaneIcon className='navBtn' />
           <PlusCircleIcon className='navBtn' />
           <HeartIcon className='navBtn' />
+
+          <img
+            className='h-10 w-10 rounded-full cursor-pointer'
+            alt='profile picture'
+            src='https://links.papareact.com/ocw'
+          />
         </div>
       </div>
     </div>
