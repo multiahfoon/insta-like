@@ -1,3 +1,4 @@
+import { NextComponentType } from 'next'
 import Image from 'next/image'
 import {
   HeartIcon,
@@ -9,7 +10,7 @@ import {
 } from '@heroicons/react/outline'
 import { HomeIcon } from '@heroicons/react/solid'
 
-export function Header() {
+export const Header: NextComponentType = () => {
   return (
     <div>
       <div className='flex justify-between max-w-6xl mx-5 lg:mx-auto'>
