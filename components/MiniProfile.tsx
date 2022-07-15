@@ -2,8 +2,8 @@ import { faker } from '@faker-js/faker'
 import { useMemo } from 'react'
 
 export function MiniProfile() {
-  const imgUrl = useMemo(() => {
-    return faker.image.avatar()
+  const currentUser = useMemo(() => {
+    return { username: faker.internet.userName(), img: faker.image.avatar() }
   }, [])
 
   return (
@@ -11,10 +11,10 @@ export function MiniProfile() {
       <img
         alt='mini profile photo'
         className='w-16 h-15 rounded-full border p-[2px]'
-        src={imgUrl}
+        src={currentUser.img}
       />
       <div className='flex-1 mx-4'>
-        <h2 className='font-bold'>username</h2>
+        <h2 className='font-bold'>{currentUser.username}</h2>
         <h3 className='text-sm text-gray-400'>Welcome to Instagram</h3>
       </div>
 
