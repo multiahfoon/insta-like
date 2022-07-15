@@ -13,12 +13,12 @@ export function MiniProfile() {
         className='w-16 h-15 rounded-full border p-[2px]'
         src={imgUrl}
       />
-      <div>
-        <h2>username</h2>
-        <h3>Welcome to Instagram</h3>
+      <div className='flex-1 mx-4'>
+        <h2 className='font-bold'>username</h2>
+        <h3 className='text-sm text-gray-400'>Welcome to Instagram</h3>
       </div>
 
-      <button>Sign Out</button>
+      <button className='text-blue-400 text-sm font-semibold'>Sign Out</button>
     </div>
   )
 }
