@@ -22,8 +22,7 @@ export function Post({ id, username, userImg, img, caption }) {
         <DotsHorizontalIcon className='h-5' />
       </div>
 
-      {/* img */}
-
+      <img alt='post image' className='object-cover w-full' src={img} />
       {/* buttons */}
 
       {/* caption */}
