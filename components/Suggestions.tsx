@@ -12,6 +12,7 @@ export function Suggestions() {
           address: faker.address.street(),
           avatar: faker.image.avatar(),
           birthdate: faker.date.birthdate().toString(),
+          company: faker.company.companyName(),
           email: faker.internet.email(),
           id: faker.datatype.uuid(),
           name: faker.name.firstName(),
@@ -39,6 +40,14 @@ export function Suggestions() {
             src={profile.avatar}
             alt='suggested profile photo'
           />
+
+          <div className='flex-1 ml-4'>
+            <h2>{profile.username}</h2>
+            <h3 className='text-xs text-gray-400'>
+              Works at {profile.company}
+            </h3>
+          </div>
+          <button className='text-blue-400 text-xs font-bold'>Follow</button>
         </div>
       ))}
     </div>
