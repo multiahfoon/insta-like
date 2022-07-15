@@ -9,7 +9,7 @@ export function Posts() {
         id: faker.datatype.uuid(),
         username: faker.internet.userName(),
         userImg: faker.image.avatar(),
-        img: faker.image.nature(),
+        img: faker.image.nature(500, 500, true),
         caption: faker.lorem.sentence(),
       }
     })
