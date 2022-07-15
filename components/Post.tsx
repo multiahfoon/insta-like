@@ -23,7 +23,16 @@ export function Post({ id, username, userImg, img, caption }) {
       </div>
 
       <img alt='post image' className='object-cover w-full' src={img} />
-      {/* buttons */}
+
+      <div className='flex justify-between pb-4 pt-4'>
+        <div className='flex space-x-4'>
+          <HeartIcon className='btn' />
+          {/* <HeartIconFilled className='btn' /> */}
+          <ChatIcon className='btn' />
+          <PaperAirplaneIcon className='btn' />
+        </div>
+        <BookmarkIcon className='btn' />
+      </div>
 
       {/* caption */}
 
