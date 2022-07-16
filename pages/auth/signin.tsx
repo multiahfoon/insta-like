@@ -18,7 +18,9 @@ export default function SignIn({ providers }: Providers) {
             <div key={provider.name}>
               <button
                 className='p-3 bg-blue-500 rounded-lg text-white'
-                onClick={() => signInWithProvider(provider.id)}
+                onClick={() =>
+                  signInWithProvider(provider.id, { callbackUrl: '/' })
+                }
               >
                 Sign in with {provider.name}
               </button>
