@@ -9,3 +9,15 @@ export interface Suggestion {
   password: string
   username: string
 }
+
+export interface Providers {
+  providers: {
+    google: {
+      id: string
+      name: string
+      type: string
+      signinUrl: string
+      callbackUrl: string
+    }
+  }
+}
