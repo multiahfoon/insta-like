@@ -3,8 +3,15 @@ import GoogleProvider from 'next-auth/providers/google'
 
 export default NextAuth({
   callbacks: {
-    async session({ session }) {
-      return session
+    async session({ session, token }) {
+      return {
+        ...session,
+        user: {
+          ...session.user,
+          username: session?.user?.name?.split(' ').join('').toLowerCase(),
+          uuid: token.sub,
+        },
+      }
     },
   },
   pages: {
