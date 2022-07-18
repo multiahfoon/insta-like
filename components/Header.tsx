@@ -1,5 +1,3 @@
-import { faker } from '@faker-js/faker'
-import Image from 'next/image'
 import {
   HeartIcon,
   MenuIcon,
@@ -9,12 +7,18 @@ import {
   UserGroupIcon,
 } from '@heroicons/react/outline'
 import { HomeIcon } from '@heroicons/react/solid'
-import { useMemo } from 'react'
+import { faker } from '@faker-js/faker'
+import Image from 'next/image'
 import { signIn, signOut, useSession } from 'next-auth/react'
+import { useMemo } from 'react'
+import { useRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
+
+import { modalState } from '../atoms/modalAtom'
 
 export function Header() {
   const { data: session } = useSession()
+  const [isOpen, setIsOpen] = useRecoilState(modalState)
   const router = useRouter()
 
   const imgUrl = useMemo(() => {
@@ -77,7 +81,10 @@ export function Header() {
                 </div>
               </div>
 
-              <PlusCircleIcon className='navBtn' />
+              <PlusCircleIcon
+                className='navBtn'
+                onClick={() => setIsOpen(!isOpen)}
+              />
               <HeartIcon className='navBtn' />
 
               <img
