@@ -83,7 +83,7 @@ export function Header() {
 
               <PlusCircleIcon
                 className='navBtn'
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => setIsOpen(true)}
               />
               <HeartIcon className='navBtn' />
 
