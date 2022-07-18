@@ -2,6 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { Feed } from '../components/Feed'
 import { Header } from '../components/Header'
+import { Modal } from '../components/Modal'
 
 const Home: NextPage = () => {
   return (
@@ -12,13 +13,11 @@ const Home: NextPage = () => {
         <link rel='icon' href='/favicon.ico' />
       </Head>
 
-      {/* header */}
       <Header />
 
-      {/* feed */}
       <Feed />
 
-      {/* modal */}
+      <Modal />
     </div>
   )
 }
