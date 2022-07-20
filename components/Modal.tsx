@@ -3,17 +3,61 @@ import { modalState } from '../atoms/modalAtom'
 import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useRef, useState } from 'react'
 import { CameraIcon } from '@heroicons/react/outline'
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from 'firebase/firestore'
+
+import { db, storage } from '../firebase'
+import { useSession } from 'next-auth/react'
+import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 
 export function Modal() {
+  const { data: session } = useSession()
+  const [isLoading, setIsLoading] = useState(false)
   const [isOpen, setIsOpen] = useRecoilState(modalState)
-  const filePickerRef = useRef(null)
   const [selectedFile, setSelectedFile] = useState(null)
+  const captionRef = useRef('')
+  const filePickerRef = useRef(null)
 
-  function addImageToPost() {
+  async function uploadPost() {
+    if (isLoading) return
+    setIsLoading(true)
+
+    const docRef = await addDoc(collection(db, 'post'), {
+      username: session.user.username,
+      caption: captionRef.current.image,
+      timestamp: serverTimestamp(),
+    })
+
+    console.log('new doc added with id:', docRef.id)
+
+    const imageRef = ref(storage, `posts/${docRef.id}/image`)
+
+    await uploadString(imageRef, selectedFile, 'data_url').then(
+      async (snapshot) => {
+        const downloadUrl = await getDownloadURL(imageRef)
+
+        await updateDoc(doc(db, 'post', docRef.id), {
+          image: downloadUrl,
+        })
+      }
+    )
+
+    setIsOpen(false)
+    setIsLoading(false)
+    setSelectedFile(null)
+  }
+
+  function addImageToPost(e) {
     const reader = new FileReader()
     if (e.target.files[0]) {
       reader.readAsDataURL(e.target.files[0])
     }
+
     reader.onload = (readerEvent) => {
       setSelectedFile(readerEvent.target.result)
     }
@@ -85,7 +129,7 @@ export function Modal() {
                   <div className='mt-2'>
                     <input
                       type='text'
-                      //   ref={captionRef}
+                      ref={captionRef}
                       className='border-none focus:ring-0 w-full text-center'
                       placeholder='Please enter a caption...'
                     />
@@ -95,7 +139,9 @@ export function Modal() {
               <div className='mt-5 sm:mt-6'>
                 <button
                   type='button'
+                  disabled={!selectedFile}
                   className='inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300'
+                  onClick={uploadPost}
                 >
                   Post
                 </button>
