@@ -4,11 +4,11 @@ import { Dialog, Transition } from '@headlessui/react'
 import { Fragment, useRef, useState } from 'react'
 import { CameraIcon } from '@heroicons/react/outline'
 import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  updateDoc,
+	addDoc,
+	collection,
+	doc,
+	serverTimestamp,
+	updateDoc,
 } from 'firebase/firestore'
 
 import { db, storage } from '../firebase'
@@ -16,140 +16,150 @@ import { useSession } from 'next-auth/react'
 import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 
 export function Modal() {
-  const { data: session } = useSession()
-  const [isLoading, setIsLoading] = useState(false)
-  const [isOpen, setIsOpen] = useRecoilState(modalState)
-  const [selectedFile, setSelectedFile] = useState(null)
-  const captionRef = useRef('')
-  const filePickerRef = useRef(null)
+	const { data: session } = useSession()
+	const [isLoading, setIsLoading] = useState(false)
+	const [isOpen, setIsOpen] = useRecoilState(modalState)
+	const [selectedFile, setSelectedFile] = useState(null)
+	const captionRef = useRef('')
+	const filePickerRef = useRef(null)
 
-  async function uploadPost() {
-    if (isLoading) return
-    setIsLoading(true)
+	async function uploadPost() {
+		if (isLoading) return
+		setIsLoading(true)
 
-    const docRef = await addDoc(collection(db, 'post'), {
-      username: session.user.username,
-      caption: captionRef.current.image,
-      timestamp: serverTimestamp(),
-    })
+		const docRef = await addDoc(collection(db, 'post'), {
+			username: session.user.username,
+			caption: captionRef.current.image,
+			timestamp: serverTimestamp(),
+		})
 
-    console.log('new doc added with id:', docRef.id)
+		const imageRef = ref(storage, `posts/${docRef.id}/image`)
 
-    const imageRef = ref(storage, `posts/${docRef.id}/image`)
+		await uploadString(imageRef, selectedFile, 'data_url').then(
+			async (snapshot) => {
+				const downloadUrl = await getDownloadURL(imageRef)
 
-    await uploadString(imageRef, selectedFile, 'data_url').then(
-      async (snapshot) => {
-        const downloadUrl = await getDownloadURL(imageRef)
+				await updateDoc(doc(db, 'post', docRef.id), {
+					image: downloadUrl,
+				})
+			}
+		)
 
-        await updateDoc(doc(db, 'post', docRef.id), {
-          image: downloadUrl,
-        })
-      }
-    )
+		setIsOpen(false)
+		setIsLoading(false)
+		setSelectedFile(null)
+	}
 
-    setIsOpen(false)
-    setIsLoading(false)
-    setSelectedFile(null)
-  }
+	function addImageToPost(e) {
+		const reader = new FileReader()
+		if (e.target.files[0]) {
+			reader.readAsDataURL(e.target.files[0])
+		}
 
-  function addImageToPost(e) {
-    const reader = new FileReader()
-    if (e.target.files[0]) {
-      reader.readAsDataURL(e.target.files[0])
-    }
+		reader.onload = (readerEvent) => {
+			setSelectedFile(readerEvent.target.result)
+		}
+	}
 
-    reader.onload = (readerEvent) => {
-      setSelectedFile(readerEvent.target.result)
-    }
-  }
+	return (
+		<Transition.Root show={isOpen} as={Fragment}>
+			<Dialog
+				as='div'
+				className='fixed z-10 inset-0 overflow-y-auto'
+				onClose={setIsOpen}
+			>
+				<div className='flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
+					<Transition.Child
+						as={Fragment}
+						enter='ease-out duration-300'
+						enterFrom='opacity-0'
+						enterTo='opacity-100'
+						leave='ease-in duration-200'
+						leaveFrom='opacity-100'
+						leaveTo='opacity-0'
+					>
+						<Dialog.Overlay className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
+					</Transition.Child>
 
-  return (
-    <Transition.Root show={isOpen} as={Fragment}>
-      <Dialog
-        as='div'
-        className='fixed z-10 inset-0 overflow-y-auto'
-        onClose={setIsOpen}
-      >
-        <div className='flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
-          <Transition.Child
-            as={Fragment}
-            enter='ease-out duration-300'
-            enterFrom='opacity-0'
-            enterTo='opacity-100'
-            leave='ease-in duration-200'
-            leaveFrom='opacity-100'
-            leaveTo='opacity-0'
-          >
-            <Dialog.Overlay className='fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity' />
-          </Transition.Child>
+					{/* trick used to center modal */}
+					<span
+						className='hidden sm:inline-block sm:align-middle sm:h-screen'
+						aria-hidden='true'
+					>
+						&#8203
+					</span>
 
-          {/* trick used to center modal */}
-          <span
-            className='hidden sm:inline-block sm:align-middle sm:h-screen'
-            aria-hidden='true'
-          >
-            &#8203
-          </span>
+					<Transition.Child
+						as={Fragment}
+						enter='ease-out duration-300'
+						enterFrom='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+						enterTo='opacity-100 translate-y-0 sm:scale-100'
+						leave='ease-in duration-200'
+						leaveFrom='opacity-100 translate-y-0 sm:scale-100'
+						leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
+					>
+						<div className='inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6'>
+							{selectedFile ? (
+								<img
+									src={selectedFile}
+									onClick={() => setSelectedFile(null)}
+									className='w-full object-contain cursor-pointer'
+									alt='post image'
+								/>
+							) : (
+								<>
+									<div
+										onClick={() => filePickerRef.current.click()}
+										className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 cursor-pointer'
+									>
+										<CameraIcon
+											className='h-6 w-6 text-red-600'
+											aria-hidden='true'
+										/>
+									</div>
+								</>
+							)}
 
-          <Transition.Child
-            as={Fragment}
-            enter='ease-out duration-300'
-            enterFrom='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
-            enterTo='opacity-100 translate-y-0 sm:scale-100'
-            leave='ease-in duration-200'
-            leaveFrom='opacity-100 translate-y-0 sm:scale-100'
-            leaveTo='opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95'
-          >
-            <div className='inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6'>
-              <div
-                onClick={() => filePickerRef.current.click()}
-                className='mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 cursor-pointer'
-              >
-                <CameraIcon
-                  className='h-6 w-6 text-red-600'
-                  aria-hidden='true'
-                />
-              </div>
-              <div>
-                <div className='mt-3 text-center sm:mt-5'>
-                  <Dialog.Title
-                    as='h3'
-                    className='text-lg leading-6 font-medium text-gray-900'
-                  >
-                    Upload a photo
-                  </Dialog.Title>
-                  <div className=''>
-                    <input
-                      ref={filePickerRef}
-                      type='file'
-                      hidden
-                      onChange={addImageToPost}
-                    />
-                  </div>
-                  <div className='mt-2'>
-                    <input
-                      type='text'
-                      ref={captionRef}
-                      className='border-none focus:ring-0 w-full text-center'
-                      placeholder='Please enter a caption...'
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className='mt-5 sm:mt-6'>
-                <button
-                  type='button'
-                  disabled={!selectedFile}
-                  className='inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300'
-                  onClick={uploadPost}
-                >
-                  Post
-                </button>
-              </div>
-            </div>
-          </Transition.Child>
-        </div>
-      </Dialog>
-    </Transition.Root>
-  )
+							<div>
+								<div className='mt-3 text-center sm:mt-5'>
+									<Dialog.Title
+										as='h3'
+										className='text-lg leading-6 font-medium text-gray-900'
+									>
+										Upload a photo
+									</Dialog.Title>
+									<div className=''>
+										<input
+											ref={filePickerRef}
+											type='file'
+											hidden
+											onChange={addImageToPost}
+										/>
+									</div>
+									<div className='mt-2'>
+										<input
+											type='text'
+											ref={captionRef}
+											className='border-none focus:ring-0 w-full text-center'
+											placeholder='Please enter a caption...'
+										/>
+									</div>
+								</div>
+							</div>
+							<div className='mt-5 sm:mt-6'>
+								<button
+									type='button'
+									disabled={!selectedFile}
+									className='inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:text-sm disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300'
+									onClick={uploadPost}
+								>
+									{isLoading ? 'Uploading...' : 'Post'}
+								</button>
+							</div>
+						</div>
+					</Transition.Child>
+				</div>
+			</Dialog>
+		</Transition.Root>
+	)
 }
