@@ -27,9 +27,10 @@ export function Modal() {
 		if (isLoading) return
 		setIsLoading(true)
 
-		const docRef = await addDoc(collection(db, 'post'), {
+		const docRef = await addDoc(collection(db, 'posts'), {
 			username: session.user.username,
-			caption: captionRef.current.image,
+			caption: captionRef.current.value,
+			profileImg: session.user.image,
 			timestamp: serverTimestamp(),
 		})
 
@@ -37,10 +38,9 @@ export function Modal() {
 
 		await uploadString(imageRef, selectedFile, 'data_url').then(
 			async (snapshot) => {
-				const downloadUrl = await getDownloadURL(imageRef)
-
-				await updateDoc(doc(db, 'post', docRef.id), {
-					image: downloadUrl,
+				const downloadURL = await getDownloadURL(imageRef)
+				await updateDoc(doc(db, 'posts', docRef.id), {
+					image: downloadURL,
 				})
 			}
 		)
