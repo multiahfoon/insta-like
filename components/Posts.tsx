@@ -20,8 +20,8 @@ export function Posts() {
 			{posts &&
 				posts.map((post) => (
 					<Post
-						key={post.data().timestamp}
-						id={post.data().timestamp}
+						key={post.id}
+						id={post.id}
 						username={post.data().username}
 						userImg={post.data().profileImg}
 						img={post.data().image}
