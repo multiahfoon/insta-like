@@ -1,4 +1,3 @@
-import { faker } from '@faker-js/faker'
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore'
 import { useEffect, useMemo, useState } from 'react'
 import { db } from '../firebase'
