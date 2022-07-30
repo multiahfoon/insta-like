@@ -23,13 +23,14 @@ import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { db } from '../firebase'
 import Moment from 'react-moment'
+import { Comment, HasLikes, Likes, Post } from '../types'
 
-export function Post({ id, username, userImg, img, caption }) {
+export function Post({ id, username, userImg, img, caption }: Post) {
 	const { data: session } = useSession()
-	const [comment, setComment] = useState('')
-	const [comments, setComments] = useState([])
-	const [likes, setLikes] = useState([])
-	const [hasLiked, setHasLiked] = useState(false)
+	const [comment, setComment] = useState<string>('')
+	const [comments, setComments] = useState<Comment>()
+	const [likes, setLikes] = useState<Likes>()
+	const [hasLiked, setHasLiked] = useState<HasLikes>(false)
 
 	useEffect(() => {
 		onSnapshot(
@@ -37,7 +38,7 @@ export function Post({ id, username, userImg, img, caption }) {
 				collection(db, 'posts', id, 'comments'),
 				orderBy('timestamp', 'desc')
 			),
-			(snapshot) => setComments(snapshot.docs)
+			({ docs }) => setComments(docs)
 		)
 	}, [db])
 
@@ -53,24 +54,24 @@ export function Post({ id, username, userImg, img, caption }) {
 		)
 	}, [likes])
 
-	const likePost = async () => {
+	async function likePost() {
 		if (hasLiked) {
-			await deleteDoc(doc(db, 'posts', id, 'likes', session.user.uuid))
+			await deleteDoc(doc(db, 'posts', id, 'likes', session?.user?.uuid))
 		} else {
-			await setDoc(doc(db, 'posts', id, 'likes', session.user.uuid), {
-				username: session.user.username,
+			await setDoc(doc(db, 'posts', id, 'likes', session?.user?.uuid), {
+				username: session?.user?.username,
 			})
 		}
 	}
 
-	const sendComment = async (e) => {
+	async function sendComment(e) {
 		e.preventDefault()
 		const commentToSend = comment
 		setComment('')
 		await addDoc(collection(db, 'posts', id, 'comments'), {
 			comment: commentToSend,
-			username: session.user.username,
-			userImage: session.user.image,
+			username: session?.user?.username,
+			userImage: session?.user?.image,
 			timestamp: serverTimestamp(),
 		})
 	}
