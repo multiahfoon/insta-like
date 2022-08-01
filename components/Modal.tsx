@@ -16,23 +16,25 @@ import { useSession } from 'next-auth/react'
 import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 import { transformSession } from '../util/transformSession'
 
+type SelectedFile = null | undefined | string | ArrayBuffer
+
 export function Modal() {
 	const { data } = useSession()
-	const [isLoading, setIsLoading] = useState(false)
+	const [isLoading, setIsLoading] = useState<boolean>(false)
 	const [isOpen, setIsOpen] = useRecoilState(modalState)
-	const [selectedFile, setSelectedFile] = useState(null)
-	const captionRef = useRef('')
-	const filePickerRef = useRef(null)
+	const [selectedFile, setSelectedFile] = useState<any>(null)
+	const captionRef = useRef<any>(null)
+	const filePickerRef = useRef<any>(null)
 
 	const session = transformSession(data)
 
 	async function uploadPost() {
-		if (isLoading) return
+		if (isLoading || !captionRef?.current) return
 		setIsLoading(true)
 
 		const docRef = await addDoc(collection(db, 'posts'), {
 			username: session.user.username,
-			caption: captionRef.current.value,
+			caption: captionRef?.current.value,
 			profileImg: session.user.image,
 			timestamp: serverTimestamp(),
 		})
@@ -53,14 +55,13 @@ export function Modal() {
 		setSelectedFile(null)
 	}
 
-	function addImageToPost(e) {
+	function addImageToPost(e: any) {
 		const reader = new FileReader()
-		if (e.target.files[0]) {
-			reader.readAsDataURL(e.target.files[0])
-		}
 
-		reader.onload = (readerEvent) => {
-			setSelectedFile(readerEvent.target.result)
+		if (e.target.files[0]) reader.readAsDataURL(e.target.files[0])
+
+		reader.onload = ({ target }) => {
+			setSelectedFile(target?.result)
 		}
 	}
 
@@ -141,8 +142,8 @@ export function Modal() {
 									</div>
 									<div className='mt-2'>
 										<input
-											type='text'
 											ref={captionRef}
+											type='text'
 											className='border-none focus:ring-0 w-full text-center'
 											placeholder='Please enter a caption...'
 										/>

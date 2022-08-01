@@ -9,7 +9,7 @@ export function Posts() {
 	useEffect(() => {
 		onSnapshot(
 			query(collection(db, 'posts'), orderBy('timestamp', 'desc')),
-			(snapshot) => {
+			(snapshot: any) => {
 				setPosts(snapshot.docs)
 			}
 		)
@@ -18,7 +18,7 @@ export function Posts() {
 	return (
 		<div>
 			{posts &&
-				posts.map((post) => (
+				posts.map((post: any) => (
 					<Post
 						key={post.id}
 						id={post.id}

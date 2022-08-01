@@ -1,11 +1,3 @@
-export type Comment = QueryDocumentSnapshot<DocumentData>[] | null
-export type HasLikes =
-	| QueryDocumentSnapshot<DocumentData>[]
-	| boolean
-	| null
-	| undefined
-export type Likes = QueryDocumentSnapshot<DocumentData>[] | null
-
 export interface Post {
 	id: string
 	username: string

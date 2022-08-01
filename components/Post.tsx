@@ -23,15 +23,15 @@ import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { db } from '../firebase'
 import Moment from 'react-moment'
-import { Comment, HasLikes, Likes, Post } from '../types'
+import { Post } from '../types'
 import { transformSession } from '../util/transformSession'
 
 export function Post({ id, username, userImg, img, caption }: Post) {
 	const { data } = useSession()
 	const [comment, setComment] = useState<string>('')
-	const [comments, setComments] = useState<Comment>()
-	const [likes, setLikes] = useState<Likes>()
-	const [hasLiked, setHasLiked] = useState<HasLikes>(false)
+	const [comments, setComments] = useState<any>()
+	const [likes, setLikes] = useState<any>()
+	const [hasLiked, setHasLiked] = useState<any>(false)
 
 	const session = transformSession(data)
 
@@ -53,7 +53,7 @@ export function Post({ id, username, userImg, img, caption }: Post) {
 
 	useEffect(() => {
 		setHasLiked(
-			likes.findIndex((like) => like.id === session?.user?.uuid) !== -1
+			likes.findIndex((like: any) => like.id === session?.user?.uuid) !== -1
 		)
 	}, [likes])
 
@@ -67,7 +67,7 @@ export function Post({ id, username, userImg, img, caption }: Post) {
 		}
 	}
 
-	async function sendComment(e) {
+	async function sendComment(e: any) {
 		e.preventDefault()
 		const commentToSend = comment
 		setComment('')
@@ -120,7 +120,7 @@ export function Post({ id, username, userImg, img, caption }: Post) {
 
 			{comments.length > 0 && (
 				<div className='ml-10 h-20 overflow-y-scroll scrollbar-thumb-black scrollbar-thin'>
-					{comments.map((comment) => (
+					{comments.map((comment: any) => (
 						<div key={comment.id} className='flex items-center space-x-2 mb-3'>
 							<img
 								className='h-7 rounded-full'
