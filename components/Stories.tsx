@@ -1,33 +1,16 @@
-import { faker } from '@faker-js/faker'
 import { useSession } from 'next-auth/react'
-import { useEffect, useState } from 'react'
+import { useRecoilValue } from 'recoil'
+import { suggestionsState } from '../atoms/suggestionsAtom'
 import { Suggestion } from '../types'
 import { transformSession } from '../util/transformSession'
 import { Story } from './Story'
 
 export const Stories = () => {
 	const { data } = useSession()
-	const [suggestions, setSuggestions] = useState<Suggestion[] | null>()
+
+	const suggestions = useRecoilValue<Suggestion[] | null>(suggestionsState)
 
 	const session = transformSession(data)
-
-	useEffect(() => {
-		if (!suggestions) {
-			setSuggestions(
-				[...Array(20)].map(() => ({
-					address: faker.address.street(),
-					avatar: faker.image.avatar(),
-					birthdate: faker.date.birthdate().toString(),
-					company: faker.company.companyName(),
-					email: faker.internet.email(),
-					id: faker.datatype.uuid(),
-					name: faker.name.firstName(),
-					password: faker.internet.password(),
-					username: faker.internet.userName(),
-				}))
-			)
-		}
-	}, [])
 
 	return (
 		<div className='flex space-x-2 p-6 bg-white mt-8 border-gray-20 border rounded-sm overflow-x-scroll scrollbar-thin scrollbar-thumb-black'>
