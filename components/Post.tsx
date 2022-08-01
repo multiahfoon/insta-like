@@ -52,6 +52,7 @@ export function Post({ id, username, userImg, img, caption }: Post) {
 	}, [db, id])
 
 	useEffect(() => {
+		if (!likes?.length) return
 		setHasLiked(
 			likes.findIndex((like: any) => like.id === session?.user?.uuid) !== -1
 		)
@@ -111,14 +112,14 @@ export function Post({ id, username, userImg, img, caption }: Post) {
 			)}
 
 			<p className='p-5 truncate'>
-				{likes.length > 0 && (
+				{likes?.length > 0 && (
 					<p className='font-bold mb-1'>{likes.length} likes</p>
 				)}
 				<span className='font-bold mr-1'>{username} </span>
 				{caption}
 			</p>
 
-			{comments.length > 0 && (
+			{comments?.length > 0 && (
 				<div className='ml-10 h-20 overflow-y-scroll scrollbar-thumb-black scrollbar-thin'>
 					{comments.map((comment: any) => (
 						<div key={comment.id} className='flex items-center space-x-2 mb-3'>
