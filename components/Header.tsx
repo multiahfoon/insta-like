@@ -9,7 +9,7 @@ import {
 import { HomeIcon } from '@heroicons/react/solid'
 import { faker } from '@faker-js/faker'
 import Image from 'next/image'
-import { signIn, signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { useMemo } from 'react'
 import { useRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
@@ -94,11 +94,10 @@ export function Header() {
 								className='h-10 w-10 rounded-full cursor-pointer'
 								alt='profile picture'
 								src={session?.user?.image ? session.user?.image : imgUrl}
-								onClick={() => signOut()}
 							/>
 						</>
 					) : (
-						<button onClick={() => signIn()}>Sign in</button>
+						<button disabled>Sign in</button>
 					)}
 				</div>
 			</div>
