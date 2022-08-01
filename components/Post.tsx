@@ -24,13 +24,16 @@ import { useEffect, useState } from 'react'
 import { db } from '../firebase'
 import Moment from 'react-moment'
 import { Comment, HasLikes, Likes, Post } from '../types'
+import { transformSession } from '../util/transformSession'
 
 export function Post({ id, username, userImg, img, caption }: Post) {
-	const { data: session } = useSession()
+	const { data } = useSession()
 	const [comment, setComment] = useState<string>('')
 	const [comments, setComments] = useState<Comment>()
 	const [likes, setLikes] = useState<Likes>()
 	const [hasLiked, setHasLiked] = useState<HasLikes>(false)
+
+	const session = transformSession(data)
 
 	useEffect(() => {
 		onSnapshot(

@@ -14,14 +14,17 @@ import {
 import { db, storage } from '../firebase'
 import { useSession } from 'next-auth/react'
 import { getDownloadURL, ref, uploadString } from 'firebase/storage'
+import { transformSession } from '../util/transformSession'
 
 export function Modal() {
-	const { data: session } = useSession()
+	const { data } = useSession()
 	const [isLoading, setIsLoading] = useState(false)
 	const [isOpen, setIsOpen] = useRecoilState(modalState)
 	const [selectedFile, setSelectedFile] = useState(null)
 	const captionRef = useRef('')
 	const filePickerRef = useRef(null)
+
+	const session = transformSession(data)
 
 	async function uploadPost() {
 		if (isLoading) return

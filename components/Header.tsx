@@ -15,11 +15,14 @@ import { useRecoilState } from 'recoil'
 import { useRouter } from 'next/router'
 
 import { modalState } from '../atoms/modalAtom'
+import { transformSession } from '../util/transformSession'
 
 export function Header() {
-	const { data: session } = useSession()
-	const [isOpen, setIsOpen] = useRecoilState(modalState)
+	const { data } = useSession()
+	const [_, setIsOpen] = useRecoilState(modalState)
 	const router = useRouter()
+
+	const session = transformSession(data)
 
 	const imgUrl = useMemo(() => {
 		return faker.image.avatar()
