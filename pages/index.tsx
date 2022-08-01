@@ -50,7 +50,7 @@ export async function getStaticProps() {
 		username: faker.internet.userName(),
 	}))
 
-	const fakePosts = [...Array(5)].map(() => {
+	const fakePosts = [...Array(10)].map(() => {
 		return {
 			id: faker.datatype.uuid(),
 			username: faker.internet.userName(),
