@@ -8,20 +8,15 @@ import {
 } from '@heroicons/react/outline'
 
 import { HeartIcon as HeartIconFilled } from '@heroicons/react/solid'
-import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import Moment from 'react-moment'
 import { Post } from '../types'
-import { transformSession } from '../util/transformSession'
 
 export function FakePost({ id, username, userImg, img, caption }: Post) {
-	const { data } = useSession()
 	const [comment, setComment] = useState<string>('')
 	const [comments, setComments] = useState<any>()
 	const [likes, setLikes] = useState<any>()
 	const [hasLiked, setHasLiked] = useState<any>(false)
-
-	const session = transformSession(data)
 
 	return (
 		<div className='bg-white my-7 border rounded-sm'>
@@ -36,20 +31,18 @@ export function FakePost({ id, username, userImg, img, caption }: Post) {
 			</div>
 
 			<img className='object-cover w-full' src={img} alt='' />
-			{session && (
-				<div className='flex justify-between px-4 pt-4'>
-					<div className='flex space-x-4  '>
-						{hasLiked ? (
-							<HeartIconFilled className='btn text-red-500' />
-						) : (
-							<HeartIcon className='btn' />
-						)}
-						<ChatIcon className='btn' />
-						<PaperAirplaneIcon className='btn' />
-					</div>
-					<BookmarkIcon className='btn' />
+			<div className='flex justify-between px-4 pt-4'>
+				<div className='flex space-x-4  '>
+					{hasLiked ? (
+						<HeartIconFilled className='btn text-red-500' />
+					) : (
+						<HeartIcon className='btn' />
+					)}
+					<ChatIcon className='btn' />
+					<PaperAirplaneIcon className='btn' />
 				</div>
-			)}
+				<BookmarkIcon className='btn' />
+			</div>
 
 			<p className='p-5 truncate'>
 				{likes?.length > 0 && (
@@ -73,24 +66,22 @@ export function FakePost({ id, username, userImg, img, caption }: Post) {
 				</div>
 			)}
 
-			{session && (
-				<form className='flex items-center p-4'>
-					<EmojiHappyIcon className='h-7 cursor-pointer' />
-					<input
-						className='border-none flex-1 focus:ring-0 outline-none'
-						type='text'
-						placeholder='Add a comment...'
-						onChange={(e) => setComment(e.target.value)}
-					/>
-					<button
-						disabled={true}
-						type='submit'
-						className='font-semibold text-blue-400'
-					>
-						Post
-					</button>
-				</form>
-			)}
+			<form className='flex items-center p-4'>
+				<EmojiHappyIcon className='h-7 cursor-pointer' />
+				<input
+					className='border-none flex-1 focus:ring-0 outline-none'
+					type='text'
+					placeholder='Add a comment...'
+					onChange={(e) => setComment(e.target.value)}
+				/>
+				<button
+					disabled={true}
+					type='submit'
+					className='font-semibold text-blue-400'
+				>
+					Post
+				</button>
+			</form>
 		</div>
 	)
 }
