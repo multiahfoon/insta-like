@@ -7,6 +7,7 @@ A instagram like application.\
 
 - TypeScript
 - React
+- Recoil
 - Tailwind CSS
 - Nextjs
 - Nodejs
