@@ -4,7 +4,7 @@ import {
 	PaperAirplaneIcon,
 	PlusCircleIcon,
 	SearchIcon,
-	UserGroupIcon,
+	CameraIcon,
 } from '@heroicons/react/outline'
 import { HomeIcon } from '@heroicons/react/solid'
 import { faker } from '@faker-js/faker'
@@ -33,25 +33,19 @@ export function Header() {
 			<div className='flex justify-between max-w-6xl mx-5 lg:mx-auto'>
 				{/* left */}
 				<div
-					className='relative hidden lg:inline-grid w-24'
+					className='relative hidden lg:inline-grid w-24 flex items-center justify-center'
 					onClick={() => router.push('/')}
 				>
-					<Image
-						layout='fill'
-						objectFit='contain'
-						src='https://links.papareact.com/ocw'
-					/>
+					<h1 className='text-2xl font-signature font-medium items-center'>
+						instaLike
+					</h1>
 				</div>
 
 				<div
-					className='relative lg:hidden w-10 flex-shrink-0 cursor-pointer'
+					className='relative lg:hidden w-10 flex items-center flex-shrink-0 cursor-pointer'
 					onClick={() => router.push('/')}
 				>
-					<Image
-						layout='fill'
-						objectFit='contain'
-						src='https://links.papareact.com/jjm'
-					/>
+					<CameraIcon />
 				</div>
 
 				<div className='max-w-xs'>
