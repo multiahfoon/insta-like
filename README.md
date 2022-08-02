@@ -1,6 +1,6 @@
 # Insta like
 
-A instagram like application.
+A instagram like application.\
 `Note: user sign in functionality is disabled in live demo.`
 
 ## Tech Stack
