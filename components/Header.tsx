@@ -32,7 +32,7 @@ export function Header() {
 		<div className='shadow-sm border-b bg-white sticky top-0 z-50'>
 			<div className='flex justify-between max-w-6xl mx-5 lg:mx-auto'>
 				<div
-					className='relative hidden lg:inline-grid w-24 flex items-center justify-center'
+					className='relative hidden lg:inline-grid w-24 items-center justify-center'
 					onClick={() => router.push('/')}
 				>
 					<h1 className='text-2xl font-signature font-medium items-center'>
