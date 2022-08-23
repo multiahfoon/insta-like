@@ -5,24 +5,6 @@ import { Suggestion } from '../types'
 export function Suggestions() {
   const [suggestions, setSuggestions] = useState<Suggestion[] | null>()
 
-  useEffect(() => {
-    if (!suggestions) {
-      setSuggestions(
-        [...Array(4)].map(() => ({
-          address: faker.address.street(),
-          avatar: faker.image.avatar(),
-          birthdate: faker.date.birthdate().toString(),
-          company: faker.company.companyName(),
-          email: faker.internet.email(),
-          id: faker.datatype.uuid(),
-          name: faker.name.firstName(),
-          password: faker.internet.password(),
-          username: faker.internet.userName(),
-        }))
-      )
-    }
-  }, [])
-
   return (
     <div className='mt-4 ml-10'>
       <div className='flex justify-between text-sm mb-5'>
